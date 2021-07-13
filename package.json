@@ -1,0 +1,33 @@
+{
+  "name": "leapbit_2021_kafka",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jelenic/LEAPBIT_2021_Kafka.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jelenic/LEAPBIT_2021_Kafka/issues"
+  },
+  "homepage": "https://github.com/jelenic/LEAPBIT_2021_Kafka#readme",
+  "dependencies": {
+    "cluster": "^0.7.7",
+    "cors": "^2.8.5",
+    "dotenv": "^10.0.0",
+    "express": "^4.17.1",
+    "kafkajs": "^1.15.0",
+    "kafkajs-snappy": "^1.1.0",
+    "mongodb": "^3.6.10"
+  },
+  "devDependencies": {
+    "eslint": "^7.30.0",
+    "eslint-config-airbnb-base": "^14.2.1",
+    "eslint-plugin-import": "^2.23.4"
+  }
+}
