@@ -72,6 +72,7 @@ const run = async () =>
     await consumer.subscribe({ topic: process.env.KAFKA_TOPIC, fromBeginning: false });
 
     await consumer.run({
+        autoCommit: false,
         eachMessage: async ({ topic, partition, message }) =>
         {
             /* console.log({
@@ -81,6 +82,13 @@ const run = async () =>
                 // value: message.value,
             }); */
             await processMessage(message);
+            consumer.pause();
+            await consumer.commitOffsets([{ topic, partition, offset: message.offset }]);
+            console.log(`commiting offset:${partition.toString()} - ${message.offset.toString()}`);
+            setImmediate(() =>
+            {
+                consumer.resume();
+            });
         },
     });
     /* await consumer.run({
