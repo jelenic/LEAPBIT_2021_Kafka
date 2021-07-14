@@ -74,7 +74,18 @@ module.exports = {
         }
         else
         {
-            const result = await restServices.getMatches(req.params);
+            const fullUrl = req.protocol + '://' + req.get('host') + req.originalUrl;
+            let lang = '';
+            if (fullUrl.substring(24, 25) === '/')
+            {
+                lang = fullUrl.substring(22, 24);
+            }
+            else
+            {
+                lang = 'en';
+            }
+            console.log(fullUrl);
+            const result = await restServices.getMatches(req.params, lang);
             // console.log(result);
             res.send(result);
         }

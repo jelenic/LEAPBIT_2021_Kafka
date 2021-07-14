@@ -1,7 +1,7 @@
 const { Connection } = require('../singletons/Connection');
 
 module.exports = {
-    getMatches: async (param) =>
+    getMatches: async (param, lang) =>
     {
         const where = {};
         // const message = {};
@@ -29,8 +29,16 @@ module.exports = {
             const regex = new RegExp(stringForR);
             const first = {};
             const second = {};
-            first['message.teamNameOne.hr-HR'] = regex;
-            second['message.teamNameTwo.hr-HR'] = regex;
+            if (lang === 'hr')
+            {
+                first['message.teamNameOne.hr-HR'] = regex;
+                second['message.teamNameTwo.hr-HR'] = regex;
+            }
+            else
+            {
+                first['message.teamNameOne.en-GB'] = regex;
+                second['message.teamNameTwo.en-GB'] = regex;
+            }
             where.$or = [first, second];
         }
         console.log(where);

@@ -29,7 +29,15 @@ else
 {
     const app = express();
     app.use(cors());
+    // const regex = /[A-Za-z]{2}/;
     app.use('/api/', routes);
+    // app.use('/en/api/', routes);
+    // app.use('/hr/api/', routes);
+
+    // app.use(`/${regex}/api/`, routes);
+    app.use('/:lang/api/', routes);
+    // app.use(/[A-Za-z]{2}\/api/, routes);
+
     // console.log(`Worker ${process.pid} started`);
     app.listen(port, () =>
     {
