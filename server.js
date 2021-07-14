@@ -36,6 +36,6 @@ else
         Connection.open();
         // console.log(`listening on port ${port}`);
         console.log(`Worker ${process.pid} started`);
-        kafka.run();
+        // kafka.run();
     });
 }

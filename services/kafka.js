@@ -81,14 +81,22 @@ const run = async () =>
                 offset: message.offset,
                 // value: message.value,
             }); */
-            await processMessage(message);
-            consumer.pause();
-            await consumer.commitOffsets([{ topic, partition, offset: message.offset }]);
-            console.log(`commiting offset:${partition.toString()} - ${message.offset.toString()}`);
-            setImmediate(() =>
+            try
             {
-                consumer.resume();
-            });
+                await processMessage(message);
+                consumer.pause();
+                await consumer.commitOffsets([{ topic, partition, offset: message.offset }]);
+                console.log(`commiting offset:${partition.toString()} - ${message.offset.toString()}`);
+                setImmediate(() =>
+                {
+                    consumer.resume();
+                });
+            }
+            catch (error)
+            {
+                console.error(error);
+                process.exit();
+            }
         },
     });
     /* await consumer.run({
