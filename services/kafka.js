@@ -38,18 +38,25 @@ async function processMessage(message)
         jsonObj.teamname2 = messageJSON.teamNameTwo;
 
         // mysql
-        const date = new Date();
-        const inserted = await SQLDatabase.insertMatch(
+        // const date = new Date();
+        const inserted1 = await SQLDatabase.insertSport(messageJSON.sportId, messageJSON.sportName['hr-HR']);
+        const inserted2 = await SQLDatabase.insertTournament(
+            messageJSON.tournamentId,
+            messageJSON.tournamentName['hr-HR'],
+        );
+        const inserted3 = await SQLDatabase.insertMatch(
             parseInt(jsonObj.key, 10),
             jsonObj.teamname1['hr-HR'],
             jsonObj.teamname2['hr-HR'],
             messageJSON.state,
             messageJSON.status,
-            // messageJSON.matchDate,
-            date,
+            messageJSON.matchDate,
+            // date,
             0,
+            messageJSON.sportId,
+            messageJSON.tournamentId,
         );
-        console.log('inserted', inserted);
+        console.log('inserted', inserted1, inserted2, inserted3);
         /* const exists = await colName.findOne({ key: jsonObj.key });
         if (exists == null)
         {
