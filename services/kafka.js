@@ -6,6 +6,7 @@ const { Kafka, CompressionTypes, CompressionCodecs } = require('kafkajs');
 const SnappyCodec = require('kafkajs-snappy');
 
 const { Connection } = require('../singletons/Connection');
+const { SQLDatabase } = require('../singletons/MySQL');
 
 CompressionCodecs[CompressionTypes.Snappy] = SnappyCodec;
 
@@ -35,6 +36,20 @@ async function processMessage(message)
         jsonObj.tournament = messageJSON.tournamentId;
         jsonObj.teamname1 = messageJSON.teamNameOne;
         jsonObj.teamname2 = messageJSON.teamNameTwo;
+
+        // mysql
+        const date = new Date();
+        const inserted = await SQLDatabase.insertMatch(
+            parseInt(jsonObj.key, 10),
+            jsonObj.teamname1['hr-HR'],
+            jsonObj.teamname2['hr-HR'],
+            messageJSON.state,
+            messageJSON.status,
+            // messageJSON.matchDate,
+            date,
+            0,
+        );
+        console.log('inserted', inserted);
         /* const exists = await colName.findOne({ key: jsonObj.key });
         if (exists == null)
         {
@@ -86,7 +101,7 @@ const run = async () =>
                 await processMessage(message);
                 consumer.pause();
                 await consumer.commitOffsets([{ topic, partition, offset: message.offset }]);
-                console.log(`commiting offset:${partition.toString()} - ${message.offset.toString()}`);
+                // console.log(`commiting offset:${partition.toString()} - ${message.offset.toString()}`);
                 setImmediate(() =>
                 {
                     consumer.resume();

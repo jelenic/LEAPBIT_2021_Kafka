@@ -9,6 +9,7 @@ class Connection
     {
         if (this.db)
         {
+            // console.log('exists');
             return this.db;
         }
         this.db = await MongoClient.connect(this.uri, this.options);

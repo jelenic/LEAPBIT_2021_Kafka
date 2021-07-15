@@ -8,10 +8,11 @@ const routes = require('./routes/index');
 const kafka = require('./services/kafka');
 
 const { Connection } = require('./singletons/Connection');
+const { SQLDatabase } = require('./singletons/MySQL');
 
 const port = 4000;
 
-const workerNum = 4;
+const workerNum = 1;
 
 if (cluster.isMaster)
 {
@@ -42,8 +43,9 @@ else
     app.listen(port, () =>
     {
         Connection.open();
+        SQLDatabase.Initialize();
         // console.log(`listening on port ${port}`);
         console.log(`Worker ${process.pid} started`);
-        // kafka.run();
+        kafka.run();
     });
 }

@@ -1,0 +1,9 @@
+DELIMITER //
+CREATE TRIGGER setNum BEFORE INSERT ON Match_Table
+FOR EACH ROW
+BEGIN
+	IF NEW.orderNum=0 THEN 
+		SET NEW.orderNum = (SELECT MAX(orderNum) FROM praksa.Match_Table) + 1;
+	END IF;
+END//
+DELIMITER ;

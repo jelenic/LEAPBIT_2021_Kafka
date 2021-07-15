@@ -23,7 +23,8 @@
     "express": "^4.17.1",
     "kafkajs": "^1.15.0",
     "kafkajs-snappy": "^1.1.0",
-    "mongodb": "^3.6.10"
+    "mongodb": "^3.6.10",
+    "mysql2": "^2.2.5"
   },
   "devDependencies": {
     "eslint": "^7.30.0",
