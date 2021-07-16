@@ -3,6 +3,60 @@ const dotenv = require('dotenv');
 
 dotenv.config();
 
+function buildConditions(params)
+{
+    const conditions = [];
+    const values = [];
+
+    if (typeof params.matchId !== 'undefined')
+    {
+        conditions.push('id LIKE ?');
+        values.push(parseInt(params.matchId, 10));
+    }
+
+    if (typeof params.sportid !== 'undefined')
+    {
+        conditions.push('sportid = ?');
+        values.push(parseInt(params.sportid, 10));
+    }
+
+    if (typeof params.tournamentid !== 'undefined')
+    {
+        conditions.push('tournamentid = ?');
+        values.push(parseInt(params.tournamentid, 10));
+    }
+
+    if (typeof params.teamNameOne !== 'undefined')
+    {
+        conditions.push('teamNameOne = ?');
+        values.push(`%${params.teamNameOne}%`);
+    }
+
+    if (typeof params.teamNameTwo !== 'undefined')
+    {
+        conditions.push('teamNameTwo = ?');
+        values.push(`%${params.teamNameTwo}%`);
+    }
+
+    if (typeof params.state !== 'undefined')
+    {
+        conditions.push('state = ?');
+        values.push(`%${params.state}%`);
+    }
+
+    if (typeof params.status !== 'undefined')
+    {
+        conditions.push('status = ?');
+        values.push(`%${params.status}%`);
+    }
+
+    return {
+        where: conditions.length
+            ? conditions.join(' AND ') : '1',
+        values,
+    };
+}
+
 class SQLDatabase
 {
     static async Initialize()
@@ -156,6 +210,28 @@ class SQLDatabase
         }
         catch (error)
         {
+            return false;
+        }
+    }
+
+    static async getData(params)
+    {
+        try
+        {
+            const conditions = buildConditions(params);
+            // console.log(conditions);
+            const query = `SELECT * FROM Match_Table 
+            INNER JOIN Tournament_Table ON Match_Table.tournamentid = Tournament_Table.id 
+            INNER JOIN Sport_Table ON Match_Table.sportid = Sport_Table.id
+            WHERE ${conditions.where} ORDER BY orderNum`;
+            // console.log(query);
+            const result = await this.Pool.query(query, conditions.values);
+            // console.log(result);
+            return result[0];
+        }
+        catch (error)
+        {
+            console.error(error);
             return false;
         }
     }

@@ -70,7 +70,7 @@ module.exports = {
     {
         if (!req.params)
         {
-            res.send('params missing');
+            res.send({ error: true, code: 'params missing' });
         }
         else
         {
@@ -87,6 +87,18 @@ module.exports = {
             console.log(fullUrl);
             const result = await restServices.getMatches(req.params, lang);
             // console.log(result);
+            res.send(result);
+        }
+    },
+    defaultQuerySQL: async (req, res) =>
+    {
+        if (!req.params)
+        {
+            res.send({ error: true, code: 'params missing' });
+        }
+        else
+        {
+            const result = await restServices.getMatchesSQL(req.params);
             res.send(result);
         }
     },

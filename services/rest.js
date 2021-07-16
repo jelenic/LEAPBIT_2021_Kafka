@@ -1,4 +1,5 @@
 const { Connection } = require('../singletons/Connection');
+const { SQLDatabase } = require('../singletons/MySQL');
 
 module.exports = {
     getMatches: async (param, lang) =>
@@ -172,4 +173,8 @@ module.exports = {
         }
         return ('no match with this teamname');
     }, */
+    getMatchesSQL: async (params) =>
+    {
+        return (SQLDatabase.getData(params));
+    },
 };
