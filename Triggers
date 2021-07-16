@@ -18,3 +18,73 @@ BEGIN
 END//
 DELIMITER ;
 ------------------------------------------------
+DELIMITER //
+CREATE TRIGGER setNum2 BEFORE UPDATE ON Match_Table
+FOR EACH ROW
+BEGIN
+	IF NEW.orderNum=0 THEN 
+		SET NEW.orderNum = (SELECT MAX(orderNum) FROM praksa.Match_Table) + 1;
+	ELSEIF NEW.orderNum>(SELECT MAX(orderNum) FROM praksa.Match_Table) THEN
+		SET NEW.orderNum = (SELECT MAX(orderNum) FROM praksa.Match_Table) + 1;
+	ELSE UPDATE praksa.Match_Table
+			SET orderNum = orderNum.value + 1
+		WHERE orderNum >= NEW.orderNum AND id != NEW.id;
+    
+    END IF;
+END//
+DELIMITER ;
+------------------------------------------------------
+DELIMITER //
+CREATE TRIGGER setNum3 AFTER UPDATE ON Match_Table
+FOR EACH ROW
+BEGIN
+	IF NEW.orderNum!=0 AND NEW.orderNum<(SELECT MAX(orderNum) FROM praksa.Match_Table) THEN 
+		SET @DISABLE_TRIGGERS=1;
+		UPDATE praksa.Match_Table
+			SET orderNum = orderNum + 1
+		WHERE orderNum >= NEW.orderNum AND id != NEW.id;
+        SET @DISABLE_TRIGGERS=NULL;
+	END IF;
+END//
+DELIMITER ;
+----------------------------------------------------------
+actual dolje
+-----------------------------------------------------------
+DELIMITER //
+CREATE TRIGGER setNum4 AFTER INSERT ON Temp_Table
+FOR EACH ROW
+BEGIN
+IF NEW.orderNum!=0 AND NEW.orderNum<(SELECT MAX(orderNum) FROM praksa.Match_Table) THEN 
+		UPDATE praksa.Match_Table
+			SET orderNum = orderNum + 1
+		WHERE (orderNum >= NEW.orderNum) AND id != NEW.matchid;
+        UPDATE praksa.Match_Table
+			SET orderNum = NEW.orderNum
+		WHERE id = NEW.matchid;
+END IF;
+END//
+DELIMITER ;
+-------------------------------------------------------
+DELIMITER //
+CREATE TRIGGER setNum2 BEFORE UPDATE ON Match_Table
+FOR EACH ROW
+BEGIN
+IF @TRIGGER_DISABLED=0 THEN
+	IF NEW.orderNum=0 THEN 
+		SET NEW.orderNum = (SELECT MAX(orderNum) FROM praksa.Match_Table) + 1;
+	ELSEIF NEW.orderNum>(SELECT MAX(orderNum) FROM praksa.Match_Table) THEN
+		SET NEW.orderNum = (SELECT MAX(orderNum) FROM praksa.Match_Table) + 1;    
+    END IF;
+END IF;
+END//
+DELIMITER ;
+------------------------------------------
+DELIMITER //
+CREATE TRIGGER setNum BEFORE INSERT ON Match_Table
+FOR EACH ROW
+BEGIN
+	IF NEW.orderNum=0 THEN 
+		SET NEW.orderNum = (SELECT MAX(orderNum) FROM praksa.Match_Table) + 1;
+	END IF;
+END//
+DELIMITER ;
